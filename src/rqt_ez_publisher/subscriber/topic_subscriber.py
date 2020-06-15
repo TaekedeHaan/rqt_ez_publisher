@@ -22,7 +22,6 @@ class TopicSubscriber(object):
             
     def subscriber_cb(self, message):
         self._message = message
-        rospy.loginfo("I heard %s", self._message)
 
     def get_topic_name(self):
         return self._name

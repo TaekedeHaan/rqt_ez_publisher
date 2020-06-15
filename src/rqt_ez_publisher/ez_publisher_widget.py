@@ -15,11 +15,10 @@ class EzPublisherWidget(QWidget):
     sig_sysmsg = QtCore.Signal(str)
 
     def __init__(self, parent=None, modules=[]):
-        self._publisher_model = ez_model.EzPublisherModel(
-            publisher.TopicPublisherWithTimer, modules=modules)
-            
-        self._subscriber_model = ez_model.EzPublisherModel(
-                    subscriber.TopicSubscriber, modules=modules)            
+        self._model = ez_model.EzPublisherModel(
+            publisher.TopicPublisherWithTimer, 
+            subscriber.TopicSubscriber,
+            modules=modules)
             
         self._sliders = []
         QWidget.__init__(self, parent=parent)
@@ -50,7 +49,7 @@ class EzPublisherWidget(QWidget):
                            'uint': ez_widget.UIntValueWidget,
                            bool: ez_widget.BoolValueWidget,
                            str: ez_widget.StringValueWidget}
-        for module in self._publisher_model.get_modules():
+        for module in self._model.get_modules():
             type_class_dict[
                 module.get_msg_string()] = module.get_widget_class()
         if output_type in type_class_dict:
@@ -59,9 +58,9 @@ class EzPublisherWidget(QWidget):
             self.sig_sysmsg.emit('not supported type %s' % output_type)
             return False
         widget = widget_class(topic_name, attributes, array_index,
-                              self._publisher_model.get_publisher(topic_name),
-                              self._subscriber_model.get_publisher(topic_name), self)
-        self._publisher_model.get_publisher(topic_name).set_manager(self)
+                              self._model.get_publisher(topic_name),
+                              self._model.get_subscriber(topic_name), self)
+        self._model.get_publisher(topic_name).set_manager(self)
         self._sliders.append(widget)
         if widget.add_button:
             widget.add_button.clicked.connect(
@@ -95,8 +94,7 @@ class EzPublisherWidget(QWidget):
             self.sig_sysmsg.emit('%s is already exists' % text)
             return
         
-        self._subscriber_model.register_topic_by_text(text)
-        results = self._publisher_model.register_topic_by_text(text)
+        results = self._model.register_topic_by_text(text)
         if not results:
             self.sig_sysmsg.emit('%s does not exists' % text)
             return
@@ -107,7 +105,7 @@ class EzPublisherWidget(QWidget):
                 array_index = 0
             self.add_widget(builtin_type, topic_name, attributes, array_index)
         else:
-            for string in self._publisher_model.expand_attribute(text, array_index):
+            for string in self._model.expand_attribute(text, array_index):
                 self.add_slider_by_text(string)
 
     def get_sliders_for_topic(self, topic):
@@ -123,7 +121,7 @@ class EzPublisherWidget(QWidget):
 
     def update_combo_items(self):
         self._combo.clear()
-        for topic in self._publisher_model.get_topic_names():
+        for topic in self._model.get_topic_names():
             self._combo.addItem(topic)
 
     def set_configurable(self, value):

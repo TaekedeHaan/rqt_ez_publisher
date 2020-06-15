@@ -187,9 +187,11 @@ class EzPublisherModel(object):
 
     '''Model for rqt_ez_publisher'''
 
-    def __init__(self, publisher_class, modules=[]):
+    def __init__(self, publisher_class, subscriber_class, modules=[]):
         self._publishers = {}
+        self._subscribers = {}
         self._publisher_class = publisher_class
+        self._subscriber_class = subscriber_class
         self._modules = modules
 
     def get_modules(self):
@@ -211,9 +213,20 @@ class EzPublisherModel(object):
         else:
             return None
 
+    def get_subscriber(self, topic_name):
+        if topic_name in self._subscribers:
+            return self._subscribers[topic_name]
+        else:
+            return None
+
     def _add_publisher_if_not_exists(self, topic_name, message_class):
         if topic_name not in self._publishers:
             self._publishers[topic_name] = self._publisher_class(
+                topic_name, message_class)
+                
+    def _add_subscriber_if_not_exists(self, topic_name, message_class):
+        if topic_name not in self._subscribers:
+            self._subscribers[topic_name] = self._subscriber_class(
                 topic_name, message_class)
 
     def get_topic_names(self):
@@ -249,6 +262,7 @@ class EzPublisherModel(object):
         topic_type_str = topic_dict[topic_name]
         message_class = roslib.message.get_message_class(topic_type_str)
         self._add_publisher_if_not_exists(topic_name, message_class)
+        self._add_subscriber_if_not_exists(topic_name, message_class)
         builtin_type, is_array = get_value_type(
             topic_type_str, attributes, modules=self._modules)
         return (topic_name, attributes, builtin_type, is_array, array_index)
