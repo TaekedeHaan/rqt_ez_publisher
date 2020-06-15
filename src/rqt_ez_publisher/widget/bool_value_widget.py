@@ -4,10 +4,10 @@ import value_widget
 
 class BoolValueWidget(value_widget.ValueWidget):
 
-    def __init__(self, topic_name, attributes, array_index, publisher, parent):
+    def __init__(self, topic_name, attributes, array_index, publisher, subscriber, parent):
         self._type = bool
         super(BoolValueWidget, self).__init__(
-            topic_name, attributes, array_index, publisher, parent)
+            topic_name, attributes, array_index, publisher, subscriber, parent)
 
     def state_changed(self, state):
         self.publish_value(self._check_box.isChecked())

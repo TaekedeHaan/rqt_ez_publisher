@@ -4,10 +4,10 @@ import value_widget
 
 class StringValueWidget(value_widget.ValueWidget):
 
-    def __init__(self, topic_name, attributes, array_index, publisher, parent):
+    def __init__(self, topic_name, attributes, array_index, publisher, subscriber, parent):
         self._type = str
         super(StringValueWidget, self).__init__(
-            topic_name, attributes, array_index, publisher, parent)
+            topic_name, attributes, array_index, publisher, subscriber, parent)
 
     def input_text(self):
         self.publish_value(str(self._line_edit.text()))

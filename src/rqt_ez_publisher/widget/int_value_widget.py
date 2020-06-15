@@ -7,10 +7,10 @@ class IntValueWidget(value_widget.ValueWidget):
 
     LCD_HEIGHT = 35
 
-    def __init__(self, topic_name, attributes, array_index, publisher, parent):
+    def __init__(self, topic_name, attributes, array_index, publisher, subscriber, parent):
         self._type = int
         super(IntValueWidget, self).__init__(
-            topic_name, attributes, array_index, publisher, parent)
+            topic_name, attributes, array_index, publisher, subscriber, parent)
 
     def slider_changed(self, value):
         self._lcd.display(value)

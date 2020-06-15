@@ -7,9 +7,13 @@ from .. import ez_publisher_model as ez_model
 
 class ValueWidget(base_widget.BaseWidget):
 
-    def __init__(self, topic_name, attributes, array_index, publisher, parent,
+    def __init__(self, topic_name, attributes, array_index, publisher, subscriber, parent,
                  label_text=None):
         super(ValueWidget, self).__init__(topic_name, publisher, parent=parent)
+        
+        initial_value = self.get_initial_value(topic_name, attributes, 
+                                               publisher, subscriber)
+        
         self._parent = parent
         self._attributes = attributes
         self._array_index = array_index
@@ -53,10 +57,17 @@ class ValueWidget(base_widget.BaseWidget):
             lambda x: self._parent.move_up_widget(self))
         self.down_button.clicked.connect(
             lambda x: self._parent.move_down_widget(self))
-        self.setup_ui(self._text)
+        self.setup_ui(self._text, initial_value=initial_value)
         self._horizontal_layout.addWidget(self._publish_button)
         self._horizontal_layout.addWidget(repeat_label)
         self._horizontal_layout.addWidget(self._repeat_box)
+
+    def get_initial_value(self, topic_name, attributes, publisher, subscriber):
+        
+        msg_instance = subscriber.get_message()
+        publisher._message = msg_instance
+        return ez_model.get_msg_attribute_value(msg_instance, topic_name, 
+                                                attributes)
 
     def repeat_changed(self, state):
         self.set_is_repeat(state == 2)

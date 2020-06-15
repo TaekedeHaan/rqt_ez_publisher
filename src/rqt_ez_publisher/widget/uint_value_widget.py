@@ -3,9 +3,9 @@ import int_value_widget
 
 class UIntValueWidget(int_value_widget.IntValueWidget):
 
-    def __init__(self, topic_name, attributes, array_index, publisher, parent):
+    def __init__(self, topic_name, attributes, array_index, publisher, subscriber, parent):
         super(UIntValueWidget, self).__init__(
-            topic_name, attributes, array_index, publisher, parent)
+            topic_name, attributes, array_index, publisher, subscriber, parent)
 
     def setup_ui(self, name):
         super(UIntValueWidget, self).setup_ui(

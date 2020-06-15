@@ -9,11 +9,11 @@ class DoubleValueWidget(value_widget.ValueWidget):
     DEFAULT_MAX_VALUE = 1.0
     DEFAULT_MIN_VALUE = -1.0
 
-    def __init__(self, topic_name, attributes, array_index, publisher, parent,
+    def __init__(self, topic_name, attributes, array_index, publisher, subscriber, parent,
                  label_text=None):
         self._type = float
         super(DoubleValueWidget, self).__init__(
-            topic_name, attributes, array_index, publisher, parent,
+            topic_name, attributes, array_index, publisher, subscriber, parent,
             label_text=label_text)
 
     def set_value(self, value):
