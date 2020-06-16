@@ -6,10 +6,13 @@ from .. import ez_publisher_model as ez_model
 
 class RPYValueWidget(double_value_widget.DoubleValueWidget):
 
-    def __init__(self, topic_name, attributes, array_index, publisher, rpy_index, parent):
+    def __init__(self, topic_name, attributes, array_index, publisher, 
+                 rpy_index, parent, q_init=None):
         self._type = 'RPY'
         self._rpy_index = rpy_index
 
+        rpy_init = tf.transformations.euler_from_quaternion([q_init.x, q_init.y, q_init.z, q_init.w])
+        initial_value = rpy_init[rpy_index]
         if self._rpy_index == 0:
             title = ez_model.make_text(
                 topic_name, attributes + ['roll'], array_index)
@@ -23,9 +26,11 @@ class RPYValueWidget(double_value_widget.DoubleValueWidget):
             rospy.logerr('this is impossible, rpy[%d]' % rpy_index)
             title = ez_model.make_text(
                 topic_name, attributes + ['???'], array_index)
+        
+        self._initial_value =   initial_value      
         super(RPYValueWidget, self).__init__(
             topic_name, attributes, array_index, publisher, parent,
-            label_text=title)
+            label_text=title, initial_value=initial_value)
 
     def publish_value(self, value):
         q_msg = ez_model.get_msg_attribute_value(self._publisher.get_message(),

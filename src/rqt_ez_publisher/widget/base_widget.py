@@ -3,7 +3,7 @@ from python_qt_binding.QtWidgets import QWidget
 
 class BaseWidget(QWidget):
 
-    def __init__(self, topic_name, publisher, parent=None):
+    def __init__(self, topic_name, publisher, parent=None, initial_value=None):
         super(BaseWidget, self).__init__(parent=None)
         self._topic_name = topic_name
         self._publisher = publisher

@@ -20,9 +20,6 @@ class DoubleValueWidget(value_widget.ValueWidget):
         self.publish_value(value)
 
     def value_to_slider(self, value):
-        print(self._min_spin_box.value())
-        print(self._max_spin_box.value())
-        print(value)
         return (value - self._min_spin_box.value()) / (
             (self._max_spin_box.value() - self._min_spin_box.value())) * 100.0
 

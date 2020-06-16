@@ -8,7 +8,7 @@ from . import rpy_value_widget
 class RPYWidget(base_widget.BaseWidget):
 
     def __init__(self, topic_name, attributes, array_index, publisher,
-                 parent=None):
+                 parent=None, initial_value=None):
         super(RPYWidget, self).__init__(topic_name, publisher, parent=parent)
         self._attributes = attributes
         self._publisher = publisher
@@ -18,9 +18,11 @@ class RPYWidget(base_widget.BaseWidget):
         self._vertical_layout = QtWidgets.QVBoxLayout()
         self._widgets = []
         self._parent = parent
+        print(initial_value)
         for i in range(3):
-            widget = rpy_value_widget.RPYValueWidget(
-                topic_name, attributes, array_index, publisher, i, self)
+            widget = rpy_value_widget.RPYValueWidget(topic_name, attributes, 
+                         array_index, publisher, i, self, 
+                         q_init=initial_value)
             self._widgets.append(widget)
             self._vertical_layout.addWidget(widget)
 
