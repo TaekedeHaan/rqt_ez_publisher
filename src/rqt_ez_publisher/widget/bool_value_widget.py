@@ -4,10 +4,12 @@ import value_widget
 
 class BoolValueWidget(value_widget.ValueWidget):
 
-    def __init__(self, topic_name, attributes, array_index, publisher, subscriber, parent):
+    def __init__(self, topic_name, attributes, array_index, publisher, parent, 
+                 initial_value=False):
         self._type = bool
+        self._initial_value = initial_value
         super(BoolValueWidget, self).__init__(
-            topic_name, attributes, array_index, publisher, subscriber, parent)
+            topic_name, attributes, array_index, publisher, parent)
 
     def state_changed(self, state):
         self.publish_value(self._check_box.isChecked())
@@ -15,5 +17,6 @@ class BoolValueWidget(value_widget.ValueWidget):
     def setup_ui(self, name):
         self._check_box = QtWidgets.QCheckBox()
         self._check_box.stateChanged.connect(self.state_changed)
+        self._check_box.setChecked(self._initial_value)
         self._horizontal_layout.addWidget(self._check_box)
         self.setLayout(self._horizontal_layout)

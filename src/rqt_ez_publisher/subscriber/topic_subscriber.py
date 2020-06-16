@@ -10,19 +10,19 @@ import rospy
 
 class TopicSubscriber(object):
 
-    def __init__(self, topic_name, message_class):
+    def __init__(self, topic_name, message_class, timeout = 0.5):
         self._name = topic_name
         try:
-            self._subsbriber = rospy.Subscriber(
-                topic_name, message_class, self.subscriber_cb)
-            self._message = message_class()
-        except ValueError as e:
-            rospy.logfatal('msg file for %s not found' % topic_name)
-            raise e
-            
-    def subscriber_cb(self, message):
-        self._message = message
+            self._message = rospy.wait_for_message(topic_name, message_class, 
+                                                   timeout = timeout)
 
+        except rospy.exceptions.ROSException as e:
+            rospy.loginfo('Did not receive a message on topic %s within a timeout of %s, continuing using default initial values', topic_name, timeout)
+            self._message = message_class()
+            
+        except rospy.exceptions.ROSInterruptException as e:
+            raise e
+              
     def get_topic_name(self):
         return self._name
 

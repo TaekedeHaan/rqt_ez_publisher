@@ -218,6 +218,12 @@ class EzPublisherModel(object):
             return self._subscribers[topic_name]
         else:
             return None
+            
+    def get_received_value(self, topic_name, attributes):
+        subscriber = self.get_subscriber(topic_name)
+        msg_instance = subscriber.get_message()
+        return get_msg_attribute_value(msg_instance, topic_name, 
+                                                attributes)
 
     def _add_publisher_if_not_exists(self, topic_name, message_class):
         if topic_name not in self._publishers:

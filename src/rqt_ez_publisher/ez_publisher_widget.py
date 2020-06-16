@@ -57,9 +57,10 @@ class EzPublisherWidget(QWidget):
         else:
             self.sig_sysmsg.emit('not supported type %s' % output_type)
             return False
+        initial_value = self._model.get_received_value(topic_name, attributes)
         widget = widget_class(topic_name, attributes, array_index,
-                              self._model.get_publisher(topic_name),
-                              self._model.get_subscriber(topic_name), self)
+                              self._model.get_publisher(topic_name), self,
+                              initial_value=initial_value)
         self._model.get_publisher(topic_name).set_manager(self)
         self._sliders.append(widget)
         if widget.add_button:
